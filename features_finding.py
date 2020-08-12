@@ -19,14 +19,14 @@ img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 #创建surf对象
 surf = cv2.xfeatures2d.SURF_creat()
 
+#寻找关键点和描述符
+keypoints1, features1 = surf.detectAndCompute(img1,None)
+keypoints2, features2 = surf.detectAndCompute(img2,None)
+
 #设置FLANN参数
 FLANN_INDEX_KDTREE = 0
 index_params = dict(algorithm=FLANN_INDEX_KDTREE,trees=5)
 search_params = dict(checks=50)
-
-#寻找关键点和描述符
-keypoints1, features1 = surf.detectAndCompute(img1,None)
-keypoints2, features2 = surf.detectAndCompute(img2,None)
 
 #将FlannBasedMatcher方法实例化
 flann = cv2.FlannBasedMatcher(index_parameters, search_parameters)

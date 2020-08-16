@@ -3,12 +3,12 @@ import cv2
 
 def rotated_img_with_fft(gray_img):
     #cut & extend image so it will be easier for FFT algorithm to calculate
-    h, w = gray.shape[:2]
+    h, w = gray_img.shape[:2]
     new_h = cv2.getOptimalDFTSize(h)
     new_w = cv2.getOptimalDFTSize(w)
     right = new_w - w
     bottom = new_h - h
-    nimg = cv2.copyMakeBorder(gray, 0, bottom, 0, right, borderType=cv2.BORDER_CONSTANT, value=0)
+    nimg = cv2.copyMakeBorder(gray_img, 0, bottom, 0, right, borderType=cv2.BORDER_CONSTANT, value=0)
 
     #perform FFT
     f = np.fft.fft2(nimg)

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>data</folder>
+	<filename>hd.JPG</filename>
+	<path>C:\Users\Administrator\Desktop\阿里云\data\hd.JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3000</width>
+		<height>4000</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>book</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>890</xmin>
+			<ymin>750</ymin>
+			<xmax>2905</xmax>
+			<ymax>3730</ymax>
+		</bndbox>
+	</object>
+</annotation>

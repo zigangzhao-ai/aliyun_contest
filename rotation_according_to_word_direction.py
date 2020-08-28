@@ -17,8 +17,9 @@ def rotated_img_with_fft(gray_img):
     fft_img = (fft_img - np.amin(fft_img)) / (np.amax(fft_img) - np.amin(fft_img))
     fft_img *= 255
 
-    # 边缘检测，关键问题1.需要对threshold1值做特定变换
-    thresh = cv2.Canny(fft_img.astype(np.uint8), 70, 150)
+    # 边缘检测，关键问题1，边界的判定对最终结果影响较大
+    blur = cv2.GaussianBlur(img, (3, 3), 1)
+    thresh = cv2.Canny(blur.astype(np.uint8), 80, 120)
 
     # 霍夫变换，关键问题2，需要对函数数值做特定变换
     lines = cv2.HoughLinesP(thresh.astype(np.uint8), 1.0, np.pi / 180, 20, minLineLength=20, maxLineGap=10)

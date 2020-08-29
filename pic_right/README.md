@@ -1,1 +1,1 @@
-# This is there the pic_right is stored.
+# This is where the pic_right is stored.

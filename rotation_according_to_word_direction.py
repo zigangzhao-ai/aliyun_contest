@@ -5,14 +5,14 @@ import cv2
 import math
 
 
-def rotated_img_with_fft(gray_img):
+def rotated_img_with_fft(img, img_gray):
     # 对图像进行边界扩充
     top_size, bottom_size, left_size, right_size = 50, 50, 50, 50
     constant = cv2.copyMakeBorder(img_gray, top_size, bottom_size, left_size, right_size,
                                   borderType=cv2.BORDER_CONSTANT, value=0)
 
     # 获取图片大小
-    h, w = gray_img.shape[:2]
+    h, w = img_gray.shape[:2]
 
     # 对图像进行傅里叶变换
     dft = np.fft.fft2(constant)
@@ -59,18 +59,11 @@ def rotated_img_with_fft(gray_img):
     M[1, 2] += (height_1 - h) / 2
 
     # 旋转
-    rotated = cv2.warpAffine(gray_img, M, (width_1, height_1), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    rotated = cv2.warpAffine(img_gray, M, (width_1, height_1), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
     rotated = cv2.resize(rotated, (int(width_1/2), int(height_1/2)), interpolation=cv2.INTER_CUBIC)
 
     return rotated
 
 
 if __name__ == "__main__":
-    img = cv2.imread(input("please input the picture: "))
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    rotated = rotated_img_with_fft(img_gray)
-
-    cv2.imshow("rotated", rotated)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    pass

@@ -3,19 +3,12 @@
 import numpy as np
 import cv2
 
-# 最小匹配阈值
-MIN_MATCH_COUNT = 10
 
-# 输入接口
-img_left = cv2.imread(input("Enter the path of img_left："))
-img_right = cv2.imread(input("Enter the path of img_right："))
+def SIFT(img_left, img_right, img_left_g, img_right_g, MIN_MATCH_COUNT=10, norm=0.75):
+    # 获取图片大小
+    global result
+    h, w = img_left.shape[:2]
 
-# 对图像进行灰度处理
-img_left_g = cv2.cvtColor(img_left, cv2.COLOR_BGR2GRAY)
-img_right_g = cv2.cvtColor(img_right, cv2.COLOR_BGR2GRAY)
-
-
-def SIFT():
     # 创建sift对象
     sift = cv2.xfeatures2d.SIFT_create()
 
@@ -37,11 +30,11 @@ def SIFT():
     # 比值判别法删除离群点，将符合要求的匹配结果进行输出
     good = []
     for m, n in matches:
-        if m.distance < 0.5 * n.distance:
+        if m.distance < norm * n.distance:
             good.append([m])
 
     matching = cv2.drawMatchesKnn(img_left, keypoints1, img_right, keypoints2, good, None, flags=2)
-    matching = cv2.resize(matching, (int(img_left.shape[0] / 2), int(img_left.shape[1])),
+    matching = cv2.resize(matching, (int(w / 2), int(h / 2)),
                           interpolation=cv2.INTER_CUBIC)
 
     if len(good) > MIN_MATCH_COUNT:
@@ -49,7 +42,7 @@ def SIFT():
         # src = source;dst = destination;pts = points
         good = []
         for m, n in matches:
-            if m.distance < 0.75 * n.distance:
+            if m.distance < norm * n.distance:
                 good.append(m)
         src_pts = np.float32([keypoints1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
         dst_pts = np.float32([keypoints2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
@@ -62,23 +55,20 @@ def SIFT():
 
         # cv2.warpPerspective：利用M矩阵对原图进行透视变换（M点乘位置向量）
         wrap = cv2.warpPerspective(img_left, H,
-                                   (2 * img_left.shape[1], 2 * img_left.shape[0]))
-        wrap[0:img_left.shape[0], 0:img_left.shape[1]] = img_right
+                                   (2 * w, 2 * h))
+        wrap[0:h, 0:w] = img_right
 
+        # 去除黑色无用部分
         rows, cols = np.where(wrap[:, :, 0] != 0)
         min_row, max_row = min(rows), max(rows) + 1
         min_col, max_col = min(cols), max(cols) + 1
-        # 去除黑色无用部分
+
         result = wrap[min_row:max_row, min_col:max_col, :]
-        result = cv2.resize(result, (1000, 800),
+        result = cv2.resize(result, (int(w / 2), int(h / 2)),
                             interpolation=cv2.INTER_CUBIC)
 
-        return matching, result
+    return matching, result
 
 
 if __name__ == '__main__':
-    matching, result = SIFT()
-    # cv2.imshow('matching', matching)
-    cv2.imshow('result', result)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    pass
